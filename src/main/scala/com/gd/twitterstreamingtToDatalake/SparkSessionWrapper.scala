@@ -12,4 +12,5 @@ trait SparkSessionWrapper {
       .getOrCreate()
   }
 
+  val test = "spark session test"
 }
