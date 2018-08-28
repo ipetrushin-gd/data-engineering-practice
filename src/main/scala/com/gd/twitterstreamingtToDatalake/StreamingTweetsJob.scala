@@ -9,14 +9,34 @@ object StreamingTweetsJob extends SparkSessionWrapper {
 
   def main(args: Array[String]): Unit = {
 
-    val englishTweets = tweetsIngestion.getTweets
+    if (validateConfiguraiton(args)) {
+      System.exit(1)
+    }
 
-    val hashTags = transformTweets.getText(englishTweets)
+    val arr = args.take(4)
+
+    TweetsIngestion.configureTwitter(arr)
+
+    val englishTweets = TweetsIngestion.getTweets
+
+    val hashTags = TransformTweets.getText(englishTweets)
 
     hashTags.saveAsTextFiles("tweets", "json")
 
     ssc.start()
     ssc.awaitTermination()
+
+  }
+
+  def validateConfiguraiton(args: Array[String]): Boolean = {
+
+    if (args.length < 4) {
+      log.error("Please login with Twitter Keys !")
+      System.err.println("Usage: TwitterData <ConsumerKey><ConsumerSecret><accessToken><accessTokenSecret>" +
+        "[<filters>]")
+      true
+    }
+    else false
 
   }
 }
