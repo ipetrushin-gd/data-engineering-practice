@@ -18,7 +18,7 @@ object TweetsIngestion {
 
   def getTweets = {
 
-    val filters: Seq[String] = Seq("uscis")
+    val filters: Seq[String] = Seq("narendramodi")
     val tweets = TwitterUtils.createStream(ssc, None, filters)
     val englishTweets = tweets.filter(_.getLang() == "en")
 
