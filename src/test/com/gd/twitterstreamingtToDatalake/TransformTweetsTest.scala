@@ -8,7 +8,7 @@ import org.scalamock.scalatest.MockFactory
 
 class TransformTweetsTest extends FunSuite with StreamingSuiteBase with MockFactory{
 
-  val mockedStatus:Status = mock[MockStatus]
+  val mockedStatus:Status = mock[twitter4j.Status]
 
   var input = new List[mockedStatus]
 
