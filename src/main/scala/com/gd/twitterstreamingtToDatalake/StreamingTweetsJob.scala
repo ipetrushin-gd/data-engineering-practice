@@ -19,7 +19,11 @@ object StreamingTweetsJob extends SparkSessionWrapper {
 
     val englishTweets = TweetsIngestion.getTweets
 
-    val hashTags = TransformTweets.getText(englishTweets)
+    val text = TransformTweets.getText(englishTweets)
+
+    text.foreachRDD(x => x.foreach(println))
+
+    val hashTags = TransformTweets.getHashTags(text)
 
     hashTags.saveAsTextFiles("tweets", "json")
 
@@ -32,7 +36,7 @@ object StreamingTweetsJob extends SparkSessionWrapper {
 
     if (args.length < 4) {
       log.error("Please login with Twitter Keys !")
-      System.err.println("Usage: TwitterData <ConsumerKey><ConsumerSecret><accessToken><accessTokenSecret>" +
+      log.error("Usage: TwitterData <ConsumerKey><ConsumerSecret><accessToken><accessTokenSecret>" +
         "[<filters>]")
       true
     }
