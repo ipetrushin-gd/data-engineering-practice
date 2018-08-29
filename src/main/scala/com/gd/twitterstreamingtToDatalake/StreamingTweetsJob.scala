@@ -12,24 +12,18 @@ object StreamingTweetsJob extends SparkSessionWrapper {
     if (validateConfiguraiton(args)) {
       System.exit(1)
     }
-
     val arr = args.take(4)
 
     TweetsIngestion.configureTwitter(arr)
 
     val englishTweets = TweetsIngestion.getTweets
-
     val text = TransformTweets.getText(englishTweets)
-
-    text.foreachRDD(x => x.foreach(println))
-
     val hashTags = TransformTweets.getHashTags(text)
 
     hashTags.saveAsTextFiles("tweets", "json")
 
     ssc.start()
     ssc.awaitTermination()
-
   }
 
   def validateConfiguraiton(args: Array[String]): Boolean = {
@@ -41,6 +35,5 @@ object StreamingTweetsJob extends SparkSessionWrapper {
       true
     }
     else false
-
   }
 }
