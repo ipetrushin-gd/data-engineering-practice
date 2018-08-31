@@ -2,7 +2,7 @@ package com.gd.twitterstreamingtToDatalake
 
 import org.scalatest.FunSuite
 
-class StreamingTweetsJobTest extends FunSuite {
+class ConfigValidationTest extends FunSuite {
 
   test("Should Validate Configuration if Number of Arguments is four or more") {
     val input = Array("aa", "bb", "bb", "cc")
