@@ -1,6 +1,6 @@
 package com.gd.twitterstreamingtToDatalake
 
-import org.apache.log4j.{Level, Logger}
+import org.apache.log4j.Logger
 
 object StreamingTweetsJob extends SparkSessionWrapper {
 
@@ -9,14 +9,16 @@ object StreamingTweetsJob extends SparkSessionWrapper {
 
   def main(args: Array[String]): Unit = {
 
-    if (validateConfiguraiton(args)) {
+    if (validateConfiguration(args)) {
       System.exit(1)
     }
     val arr = args.take(4)
-
     TweetsIngestion.configureTwitter(arr)
 
-    val englishTweets = TweetsIngestion.getTweets
+    //Incase Only tweets related to a specific Hashtags are needed..
+    val filters = args.takeRight(args.length - 4)
+
+    val englishTweets = TweetsIngestion.getTweets(filters)
     val text = TransformTweets.getText(englishTweets)
     val hashTags = TransformTweets.getHashTags(text)
 
@@ -26,7 +28,7 @@ object StreamingTweetsJob extends SparkSessionWrapper {
     ssc.awaitTermination()
   }
 
-  def validateConfiguraiton(args: Array[String]): Boolean = {
+  def validateConfiguration(args: Array[String]): Boolean = {
 
     if (args.length < 4) {
       log.error("Please login with Twitter Keys !")
