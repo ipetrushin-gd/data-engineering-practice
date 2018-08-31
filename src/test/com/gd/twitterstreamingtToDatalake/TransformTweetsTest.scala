@@ -22,10 +22,4 @@ class TransformTweetsTest extends FunSuite with StreamingSuiteBase with MockFact
 
     testOperation(input, TransformTweets.getHashTags _, expected, ordered = false)
   }
-
-  test("Sample Transformation to check the StreamingTestSuite") {
-    val input = List(List("hi"), List("hi there you"), List("bye"))
-    val expected = List(List("hi"), List("hi", "there", "you"), List("bye"))
-    testOperation(input, TransformTweets.tokenize _, expected, ordered = false)
-  }
 }
