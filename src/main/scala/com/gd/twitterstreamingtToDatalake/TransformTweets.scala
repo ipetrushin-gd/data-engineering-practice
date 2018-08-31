@@ -6,7 +6,7 @@ import twitter4j.Status
 object TransformTweets {
 
   def getText(englishTweets: DStream[Status]): DStream[String] = {
-    val text = englishTweets.map(x => x.getText)
+    val text = englishTweets.map(_.getText)
 
     text
   }
@@ -17,7 +17,4 @@ object TransformTweets {
     hashTags
   }
 
-  def tokenize(f: DStream[String]): DStream[String] = {
-    f.flatMap(_.split(" "))
-  }
 }
