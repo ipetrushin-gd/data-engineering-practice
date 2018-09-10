@@ -6,15 +6,10 @@ import twitter4j.Status
 object TransformTweets {
 
   def getText(englishTweets: DStream[Status]): DStream[String] = {
-    val text = englishTweets.map(_.getText)
-
-    text
+    englishTweets.map(_.getText)
   }
 
   def getHashTags(text: DStream[String]): DStream[String] = {
-    val hashTags = text.flatMap(_.split(" ")).filter(_.startsWith("#"))
-
-    hashTags
+    text.flatMap(_.split(" ")).filter(_.startsWith("#"))
   }
-
 }
