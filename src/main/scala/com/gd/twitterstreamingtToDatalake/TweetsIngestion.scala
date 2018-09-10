@@ -5,12 +5,12 @@ import org.apache.spark.streaming.twitter.TwitterUtils
 
 object TweetsIngestion {
 
-  def configureTwitter(arr: Array[String]) = {
+  def configureTwitter(authKeys: Array[String]) {
 
-    System.setProperty("twitter4j.oauth.consumerKey", arr(0))
-    System.setProperty("twitter4j.oauth.consumerSecret", arr(1))
-    System.setProperty("twitter4j.oauth.accessToken", arr(2))
-    System.setProperty("twitter4j.oauth.accessTokenSecret", arr(3))
+    System.setProperty("twitter4j.oauth.consumerKey", authKeys(0))
+    System.setProperty("twitter4j.oauth.consumerSecret", authKeys(1))
+    System.setProperty("twitter4j.oauth.accessToken", authKeys(2))
+    System.setProperty("twitter4j.oauth.accessTokenSecret", authKeys(3))
   }
 
   def getTweets(filters:Array[String]) = {
