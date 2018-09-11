@@ -1,9 +1,10 @@
-package com.gd.twitterstreamingtToDatalake
+package com.gd.twitterstreaming
 
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 trait SparkSessionWrapper {
+  //TODO: Add Spark Configuration via command line
 
   val conf = new SparkConf()
   conf.setAppName("twitterStreaming").setMaster("local")
