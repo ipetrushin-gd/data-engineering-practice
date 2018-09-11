@@ -1,4 +1,4 @@
-package com.gd.twitterstreamingtToDatalake
+package com.gd.twitterstreaming
 
 import org.apache.spark.streaming.dstream.DStream
 import twitter4j.Status

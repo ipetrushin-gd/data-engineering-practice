@@ -1,4 +1,4 @@
-package com.gd.twitterstreamingtToDatalake
+package com.gd.twitterstreaming
 
 import org.apache.log4j.Logger
 
@@ -8,7 +8,7 @@ object StreamingTweetsJob extends SparkSessionWrapper {
 
   def main(args: Array[String]): Unit = {
 
-    if (isConfValid(args)) {
+    if (ConfigValidator.isConfValid(args)) {
       val authorizationKeys = args.take(4)
       TweetsIngestion.configureTwitter(authorizationKeys)
 
@@ -27,23 +27,4 @@ object StreamingTweetsJob extends SparkSessionWrapper {
     else
       System.exit(1)
   }
-
-  def isConfValid(keys: Array[String]): Boolean = {
-
-    if (keys.length < 4) {
-      log.error("Number of keys should be at least four! Please login with all keys !")
-      false
-    }
-    else if (validateTwitterKeys(keys)) true
-    else {
-      log.error("Twitter keys are not correct !")
-      log.error("Usage: TwitterData <ConsumerKey> <ConsumerSecret> <accessToken> <accessTokenSecret> " +
-        "[<filters (If Any)>]")
-      false
-    }
-  }
-
-    def validateTwitterKeys(keys:Array[String]):Boolean = {
-      keys.forall(_.contains(""))
-    }
 }
