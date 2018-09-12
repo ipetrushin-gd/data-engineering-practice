@@ -1,11 +1,11 @@
 package com.gd.twitterstreaming
 
 import org.apache.log4j.Logger
+import SparkSessionConfig.ssc
 
-object StreamingTweetsJob extends SparkSessionWrapper {
+object StreamingTweetsJob {
 
   val log = Logger.getLogger(StreamingTweetsJob.getClass.getName)
-
   def main(args: Array[String]): Unit = {
 
     if (ConfigValidator.isConfValid(args)) {
@@ -21,7 +21,7 @@ object StreamingTweetsJob extends SparkSessionWrapper {
 
       hashTags.saveAsTextFiles("tweets", "json")
 
-      ssc.start()
+      ssc.start
       ssc.awaitTermination()
     }
     else

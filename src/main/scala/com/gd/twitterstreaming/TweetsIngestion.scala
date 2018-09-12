@@ -1,8 +1,9 @@
 package com.gd.twitterstreaming
 
 import org.apache.spark.streaming.twitter.TwitterUtils
+import SparkSessionConfig.ssc
 
-object TweetsIngestion extends SparkSessionWrapper {
+object TweetsIngestion {
 
   def configureTwitter(authKeys: Array[String]) {
 

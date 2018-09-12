@@ -3,7 +3,7 @@ package com.gd.twitterstreaming
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-trait SparkSessionWrapper {
+object SparkSessionConfig {
   //TODO: Add Spark Configuration via command line
 
   val conf = new SparkConf()
