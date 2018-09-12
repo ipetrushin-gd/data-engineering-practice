@@ -1,7 +1,7 @@
 package com.gd.twitterstreaming
 
 import org.apache.spark.streaming.twitter.TwitterUtils
-import SparkSessionConfig.ssc
+import org.apache.spark.streaming.StreamingContext
 
 object TweetsIngestion {
 
@@ -13,11 +13,9 @@ object TweetsIngestion {
     System.setProperty("twitter4j.oauth.accessTokenSecret", authKeys(3))
   }
 
-  def getTweets(filters:Array[String]) = {
+  def getTweets(ssc:StreamingContext,filters:Array[String]) = {
 
     val tweets = TwitterUtils.createStream(ssc, None, filters)
-    val englishTweets = tweets.filter(_.getLang == "en")
-
-    englishTweets
+    tweets.filter(_.getLang == "en")
   }
 }
