@@ -1,5 +1,6 @@
 package com.gd.twitterstreaming
 
+import com.gd.twitterstreaming.util.TweetsConstant
 import org.apache.spark.streaming.twitter.TwitterUtils
 import org.apache.spark.streaming.StreamingContext
 
@@ -16,6 +17,6 @@ object TweetsIngestion {
   def getTweets(ssc:StreamingContext,filters:Array[String]) = {
 
     val tweets = TwitterUtils.createStream(ssc, None, filters)
-    tweets.filter(_.getLang == "en")
+    tweets.filter(_.getLang == TweetsConstant.TWEETS_LANG_FILTER)
   }
 }

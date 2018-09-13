@@ -19,10 +19,9 @@ object StreamingTweetsJob {
       val filters = args.takeRight(args.length - 4)
 
       val englishTweets = TweetsIngestion.getTweets(ssc,filters)
-      val tweetInfo = TransformTweets.getText(englishTweets)
-      val hashTags = TransformTweets.getHashTags(tweetInfo)
+      val tweetsInfo = TransformTweets.getDateAndText(englishTweets)
+                        TransformTweets.processTweetsInfo(tweetsInfo)
 
-      hashTags.saveAsTextFiles("tweets", "json")
       ssc.start
       ssc.awaitTermination()
     }
@@ -33,8 +32,8 @@ object StreamingTweetsJob {
   def setSparkSessionConf() = {
 
     //TODO: Add Spark Configuration via command line
-    val conf = new SparkConf()
-    conf.setAppName("twitterStreaming").setMaster("local")
-    new StreamingContext(conf, Seconds(5))
+    val sparkConf = new SparkConf().
+                        setAppName("twitterStreaming").setMaster("local[*]")
+    new StreamingContext(sparkConf, Seconds(2))
   }
 }
