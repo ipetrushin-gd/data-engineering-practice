@@ -1,4 +1,4 @@
-package com.gd.twitterstreaming
+package com.gd.twitteranalytics
 
 import org.scalatest.FreeSpec
 
