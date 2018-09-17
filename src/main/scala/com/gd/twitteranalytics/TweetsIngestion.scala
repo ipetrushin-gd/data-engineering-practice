@@ -1,6 +1,6 @@
-package com.gd.twitterstreaming
+package com.gd.twitteranalytics
 
-import com.gd.twitterstreaming.util.TweetsConstant
+import com.gd.twitteranalytics.util.TweetsConstant
 import org.apache.spark.streaming.twitter.TwitterUtils
 import org.apache.spark.streaming.StreamingContext
 

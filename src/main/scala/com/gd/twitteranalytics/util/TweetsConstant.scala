@@ -1,4 +1,4 @@
-package com.gd.twitterstreaming.util
+package com.gd.twitteranalytics.util
 
 object TweetsConstant {
 

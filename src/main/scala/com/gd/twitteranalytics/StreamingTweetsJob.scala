@@ -1,4 +1,4 @@
-package com.gd.twitterstreaming
+package com.gd.twitteranalytics
 
 import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
@@ -10,7 +10,6 @@ object StreamingTweetsJob {
 
   def main(args: Array[String]): Unit = {
 
-    val ssc = setSparkSessionConf
     if (ConfigValidator.isConfValid(args)) {
       val authorizationKeys = args.take(4)
       TweetsIngestion.configureTwitter(authorizationKeys)
@@ -18,9 +17,11 @@ object StreamingTweetsJob {
       //Incase Only tweets related to a specific Hashtags are needed..
       val filters = args.takeRight(args.length - 4)
 
+      val ssc = setSparkSessionConf
       val englishTweets = TweetsIngestion.getTweets(ssc,filters)
       val tweetsInfo = TransformTweets.getDateAndText(englishTweets)
-                        TransformTweets.processTweetsInfo(tweetsInfo)
+      tweetsInfo.foreachRDD(_.foreach(println))
+      TransformTweets.processTweetsInfo(tweetsInfo)
 
       ssc.start
       ssc.awaitTermination()

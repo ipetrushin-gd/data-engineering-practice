@@ -1,4 +1,4 @@
-package com.gd.twitterstreaming
+package com.gd.twitteranalytics
 
 import java.util.{Date => JavaDate}
 import java.sql.Timestamp
@@ -9,7 +9,7 @@ import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions.date_format
 import twitter4j.Status
-import com.gd.twitterstreaming.util._
+import com.gd.twitteranalytics.util._
 import org.apache.spark.rdd.RDD
 
 object TransformTweets {
@@ -19,7 +19,6 @@ object TransformTweets {
   }
 
   def processTweetsInfo(tweetsInfo: DStream[(JavaDate,String)])={
-
     tweetsInfo.foreachRDD{ rdd =>
       var tweetsDataFrame = getOutputAsDataFrame(rdd)
       tweetsDataFrame = updateDateColFormat(tweetsDataFrame)
@@ -28,7 +27,6 @@ object TransformTweets {
   }
 
   def getOutputAsDataFrame(pairRdd:RDD[(JavaDate,String)])= {
-
     val spark = SparkSessionSingleton.getInstance(pairRdd.sparkContext.getConf)
     import spark.implicits._
 
@@ -39,7 +37,7 @@ object TransformTweets {
 
     val updatedDateFormat = date_format(inputDataFrame(TweetsConstant.PARTITION_COLUMN),
                                                       TweetsConstant.OUTPUT_DATE_FORMAT)
-                            inputDataFrame.withColumn(TweetsConstant.PARTITION_COLUMN,updatedDateFormat)
+    inputDataFrame.withColumn(TweetsConstant.PARTITION_COLUMN,updatedDateFormat)
   }
 }
 
