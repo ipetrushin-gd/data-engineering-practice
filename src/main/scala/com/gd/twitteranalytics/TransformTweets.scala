@@ -12,7 +12,8 @@ import twitter4j.Status
 import com.gd.twitteranalytics.util._
 import org.apache.spark.rdd.RDD
 
-object TransformTweets {
+@SerialVersionUID(112L)
+object TransformTweets extends Serializable {
 
   def getDateAndText(englishTweets: DStream[Status]) = {
     englishTweets.map(x => (x.getCreatedAt,x.getText))
