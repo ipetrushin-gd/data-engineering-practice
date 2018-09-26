@@ -1,0 +1,57 @@
+package twitteranalytics
+
+import java.sql.Timestamp
+import java.util.Date
+
+import com.gd.twitteranalytics.TransformTweets
+import com.holdenkarau.spark.testing.{DataFrameSuiteBase, StreamingSuiteBase}
+import org.scalatest.FreeSpec
+import twitter4j.TwitterObjectFactory
+import org.scalamock.scalatest.MockFactory
+
+class TransformTweetsTest extends FreeSpec with StreamingSuiteBase with MockFactory  with DataFrameSuiteBase {
+
+  "TransformTweets" - {
+    val constDate = new Date("Wed Sep 26 10:37:20 PDT 2018")
+    val text = "This is the #Sample #text for #test purpose"
+    val origDate = new Timestamp(constDate.getTime)
+
+    "getDateAndText function" - {
+    "when presented with a complete tweet status" - {
+      "should retrieve date and text from the tweets status" in {
+        val rawJSON: String = "{  \"geo\": null,  \"in_reply_to_screen_name\": null,  \"favorited\": false,  \"text\": \"RT @fxThailandfans: RT @princezephyr: [PRESS PICS] 121114 f(x) - KOR-AUS Football Match Half-time Show http:\\/\\/t.co\\/cbm1aPCU http:\\/\\/t.co\\/ ...\",  \"possibly_sensitive\": false,  \"in_reply_to_status_id_str\": null,  \"created_at\": \"Wed Sep 26 10:37:20 PDT 2018\",  \"in_reply_to_user_id_str\": null,  \"retweet_count\": 2,  \"coordinates\": null,  \"source\": \"<a href=\\\"http:\\/\\/blackberry.com\\/twitter\\\" rel=\\\"nofollow\\\">Twitter for BlackBerry\\u00ae<\\/a>\",  \"entities\": {    \"hashtags\": [          ],    \"user_mentions\": [      {        \"indices\": [          3,          18        ],        \"screen_name\": \"fxThailandfans\",        \"id_str\": \"563934022\",        \"name\": \"fx_thailand\",        \"id\": 563934022      },      {        \"indices\": [          23,          36        ],        \"screen_name\": \"princezephyr\",        \"id_str\": \"251443396\",        \"name\": \"princezephyr\",        \"id\": 251443396      }    ],    \"urls\": [      {        \"indices\": [          103,          123        ],        \"display_url\": \"twitpic.com\\/bd46lk\",        \"url\": \"http:\\/\\/t.co\\/cbm1aPCU\",        \"expanded_url\": \"http:\\/\\/twitpic.com\\/bd46lk\"      },      {        \"indices\": [          124,          136        ],        \"url\": \"http:\\/\\/t.co\\/\",        \"expanded_url\": null      }    ]  },  \"place\": null,  \"retweeted\": false,  \"truncated\": false,  \"id_str\": \"268685470089764864\",  \"retweeted_status\": {    \"geo\": null,    \"in_reply_to_screen_name\": null,    \"favorited\": false,    \"text\": \"RT @princezephyr: [PRESS PICS] 121114 f(x) - KOR-AUS Football Match Half-time Show http:\\/\\/t.co\\/cbm1aPCU http:\\/\\/t.co\\/UW5HBXHn (7)\",    \"possibly_sensitive\": false,    \"in_reply_to_status_id_str\": null,    \"created_at\": \"Wed Nov 14 11:42:13 +0000 2012\",    \"in_reply_to_user_id_str\": null,    \"retweet_count\": 2,    \"coordinates\": null,    \"source\": \"<a href=\\\"http:\\/\\/www.tweetdeck.com\\\" rel=\\\"nofollow\\\">TweetDeck<\\/a>\",    \"entities\": {      \"hashtags\": [              ],      \"user_mentions\": [        {          \"indices\": [            3,            16          ],          \"screen_name\": \"princezephyr\",          \"id_str\": \"251443396\",          \"name\": \"princezephyr\",          \"id\": 251443396        }      ],      \"urls\": [        {          \"indices\": [            83,            103          ],          \"display_url\": \"twitpic.com\\/bd46lk\",          \"url\": \"http:\\/\\/t.co\\/cbm1aPCU\",          \"expanded_url\": \"http:\\/\\/twitpic.com\\/bd46lk\"        },        {          \"indices\": [            104,            124          ],          \"display_url\": \"twitpic.com\\/bd46tf\",          \"url\": \"http:\\/\\/t.co\\/UW5HBXHn\",          \"expanded_url\": \"http:\\/\\/twitpic.com\\/bd46tf\"        }      ]    },    \"place\": null,    \"retweeted\": false,    \"truncated\": false,    \"id_str\": \"268680229562744832\",    \"contributors\": null,    \"in_reply_to_user_id\": null,    \"in_reply_to_status_id\": null,    \"user\": {      \"friends_count\": 44,      \"profile_link_color\": \"939AED\",      \"followers_count\": 834,      \"is_translator\": false,      \"default_profile\": false,      \"follow_request_sent\": null,      \"contributors_enabled\": false,      \"time_zone\": \"Bangkok\",      \"created_at\": \"Thu Apr 26 18:22:34 +0000 2012\",      \"profile_background_color\": \"C0DEED\",      \"profile_background_tile\": true,      \"profile_background_image_url_https\": \"https:\\/\\/si0.twimg.com\\/profile_background_images\\/576266919\\/0bvixbmvg2lj69ajtg6i.jpeg\",      \"url\": \"http:\\/\\/www.fxthailand.com\\/\",      \"description\": \"f(x) Thailand Fans Board.\\r\\n\\r\\nhttps:\\/\\/www.facebook.com\\/Fxthailandfans\",      \"profile_sidebar_fill_color\": \"DDEEF6\",      \"default_profile_image\": false,      \"lang\": \"en\",      \"favourites_count\": 1,      \"profile_sidebar_border_color\": \"C0DEED\",      \"profile_image_url_https\": \"https:\\/\\/si0.twimg.com\\/profile_images\\/2592067376\\/3q4797y4mhfcvh7b7k14_normal.png\",      \"location\": \"\",      \"id_str\": \"563934022\",      \"verified\": false,      \"notifications\": null,      \"protected\": false,      \"screen_name\": \"fxThailandfans\",      \"following\": null,      \"geo_enabled\": false,      \"profile_use_background_image\": true,      \"profile_image_url\": \"http:\\/\\/a0.twimg.com\\/profile_images\\/2592067376\\/3q4797y4mhfcvh7b7k14_normal.png\",      \"name\": \"fx_thailand\",      \"profile_text_color\": \"333333\",      \"id\": 563934022,      \"listed_count\": 6,      \"statuses_count\": 1840,      \"profile_background_image_url\": \"http:\\/\\/a0.twimg.com\\/profile_background_images\\/576266919\\/0bvixbmvg2lj69ajtg6i.jpeg\",      \"utc_offset\": 25200    },    \"id\": 268680229562744832,    \"possibly_sensitive_editable\": true  },  \"contributors\": null,  \"in_reply_to_user_id\": null,  \"in_reply_to_status_id\": null,  \"user\": {    \"friends_count\": 96,    \"profile_link_color\": \"0084B4\",    \"followers_count\": 62,    \"is_translator\": false,    \"default_profile\": true,    \"follow_request_sent\": null,    \"contributors_enabled\": false,    \"time_zone\": null,    \"created_at\": \"Tue Jul 17 12:29:08 +0000 2012\",    \"profile_background_color\": \"C0DEED\",    \"profile_background_tile\": false,    \"profile_background_image_url_https\": \"https:\\/\\/si0.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",    \"url\": null,    \"description\": \"\\u0e2d\\u0e31\\u0e19\\u0e22\\u0e2d\\u0e07\\u0e04\\u0e48\\u0e30 !! \\u0e09\\u0e31\\u0e19\\u0e0b\\u0e39\\u0e08\\u0e35\\u0e27\\u0e07\\u0e21\\u0e34\\u0e2a\\u0e40\\u0e2d \\u0e09\\u0e31\\u0e19\\u0e23\\u0e31\\u0e48\\u0e27 \\u0e19\\u0e48\\u0e32\\u0e23\\u0e31\\u0e01 \\u0e25\\u0e2d\\u0e07\\u0e1f\\u0e2d\\u0e25\\u0e21\\u0e32\\u0e2a\\u0e34\\u0e04\\u0e48\\u0e30\\u0e41\\u0e25\\u0e49\\u0e27\\u0e04\\u0e38\\u0e13\\u0e08\\u0e30\\u0e23\\u0e39\\u0e49 *\\u0e22\\u0e34\\u0e49\\u0e21\\u0e2a\\u0e27\\u0e22*\",    \"profile_sidebar_fill_color\": \"DDEEF6\",    \"default_profile_image\": false,    \"lang\": \"th\",    \"favourites_count\": 2,    \"profile_sidebar_border_color\": \"C0DEED\",    \"profile_image_url_https\": \"https:\\/\\/si0.twimg.com\\/profile_images\\/2748527294\\/6cd82d00840820ddc2bedffdfb5e15bd_normal.jpeg\",    \"location\": \"\\u0e43\\u0e19\\u0e04\\u0e48\\u0e32\\u0e22 JYP \\u0e04\\u0e48\\u0e30\",    \"id_str\": \"700968576\",    \"verified\": false,    \"notifications\": null,    \"protected\": false,    \"screen_name\": \"suzy12missA\",    \"following\": null,    \"geo_enabled\": false,    \"profile_use_background_image\": true,    \"profile_image_url\": \"http:\\/\\/a0.twimg.com\\/profile_images\\/2748527294\\/6cd82d00840820ddc2bedffdfb5e15bd_normal.jpeg\",    \"name\": \"\\u0e19\\u0e32\\u0e07\\u0e40\\u0e1a!!\\u0e0b\\u0e39\\u0e08\\u0e35^^\",    \"profile_text_color\": \"333333\",    \"id\": 700968576,    \"listed_count\": 1,    \"statuses_count\": 428,    \"profile_background_image_url\": \"http:\\/\\/a0.twimg.com\\/images\\/themes\\/theme1\\/bg.png\",    \"utc_offset\": null  },  \"id\": 268680229562744832,  \"possibly_sensitive_editable\": true}"
+        val tweetStatus = TwitterObjectFactory.createStatus(rawJSON)
+        val input = List(List(tweetStatus))
+        val expected = List(List((constDate,"RT @fxThailandfans: RT @princezephyr: [PRESS PICS] 121114 f(x) - KOR-AUS Football Match Half-time Show http://t.co/cbm1aPCU http://t.co/ ...")))
+        testOperation(input,TransformTweets.getDateAndText _,expected,ordered = false)
+      }
+    }
+  }
+    "getOutputAsDataFrame function" - {
+      "when presented with an RDD of Date and String" - {
+        "should generate a Dataframe of columns event_date[TimeStamp] and text[String]" in {
+          val sqlCtx = sqlContext
+          import sqlCtx.implicits._
+
+          val expectedDf = Seq((origDate,text),(origDate,text)).toDF("event_date","text")
+          val inputRdd = sc.parallelize(Seq((constDate, text), (constDate, text)))
+          val generatedDf = TransformTweets.convertRddToDataFrame(inputRdd)
+          assertDataFrameEquals(expectedDf,generatedDf)
+        }
+      }
+    }
+    "updateDateColFormat function" - {
+      "when presented with a DataFrame of format YYYY/MM/DD HH:MM:SS" -{
+        "should update the format to YYYYMMDD HH.MM" in {
+          val sqlCtx = sqlContext
+          import sqlCtx.implicits._
+
+          val sourceDf = Seq((origDate,text),(origDate,text)).toDF("event_date","text")
+          val generatedDf = TransformTweets.updateDateColFormat(sourceDf)
+          val dateFromDf = generatedDf.select("event_date").first.getString(0)
+          assert("20180926 10.37" === dateFromDf)
+        }
+      }
+    }
+  }
+}
