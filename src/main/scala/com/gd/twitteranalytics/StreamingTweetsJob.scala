@@ -1,14 +1,14 @@
 package com.gd.twitteranalytics
 
-import com.gd.twitteranalytics.TransformTweets._
-import com.gd.twitteranalytics.TweetsDataSave._
+import com.gd.twitteranalytics.TweetsTransformer._
+import com.gd.twitteranalytics.TweetsDataLoader._
 import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import java.util.{Date => JavaDate}
 
-import com.gd.twitteranalytics.util.ReadTwitterConf
+import com.gd.twitteranalytics.util.AppConfigReader
 import com.typesafe.config.ConfigException
 
 object StreamingTweetsJob {
@@ -18,17 +18,17 @@ object StreamingTweetsJob {
   def main(args: Array[String]): Unit = {
     try {
       val authKeys = ConfigValidator.validateTwitterAuth
-
       if (ConfigValidator.isConfValid(authKeys)) {
-        TweetsIngestion.configureTwitter()
+        TweetsDataReader.configureTwitter()
 
         //Incase Only tweets related to a specific Hashtags are needed..
-        val filters = ReadTwitterConf.HASHTAGS
+        val filters = AppConfigReader.HashTags
+        val dateColumn = "event_date"
 
-        val ssc = setSparkSessionConf
-        val englishTweets = TweetsIngestion.getTweets(ssc, Array(filters))
+        val ssc = setSparkStreamingContext
+        val englishTweets = TweetsDataReader.getTweets(ssc, Array(filters))
         val tweetsInfo = getDateAndText(englishTweets)
-        processTweetsInfo(tweetsInfo)
+        processTweetsInfo(tweetsInfo,AppConfigReader.SavePath,dateColumn)
 
         ssc.start
         ssc.awaitTermination()
@@ -43,27 +43,27 @@ object StreamingTweetsJob {
     }
   }
 
-  def setSparkSessionConf() = {
+  def setSparkStreamingContext() = {
 
     //TODO: Add Spark Configuration via command line
     val sparkConf = new SparkConf().
-      setAppName(ReadTwitterConf.APPNAME).setMaster(ReadTwitterConf.MASTERURL)
+      setAppName(AppConfigReader.AppName).setMaster(AppConfigReader.MasterUrl)
     new StreamingContext(sparkConf, Seconds(2))
   }
 
-  def processTweetsInfo(tweetsInfo: DStream[(JavaDate, String)]) = {
+  def processTweetsInfo(tweetsInfo: DStream[(JavaDate, String)],path:String,dateColumn:String) = {
     tweetsInfo.foreachRDD { rdd =>
       var tweetsDataFrame = convertRddToDataFrame(rdd)
-      tweetsDataFrame = updateDateColFormat(tweetsDataFrame)
-      saveOutputToHdfs(tweetsDataFrame)
+      tweetsDataFrame = updateDateColFormat(tweetsDataFrame,dateColumn)
+      saveOutputToHdfs(tweetsDataFrame,path,dateColumn)
     }
   }
 
   def handleException(exception: Exception) {
     exception match {
-      case exception: ConfigException.Missing =>
+      case exception: ConfigException =>
         if (exception.getMessage == null)
-          log.error("Please check the Authentication Twitter Keys !")
+          log.error(">>>Application configuration is not valid. Please provide the config parameters! ")
         else
           log.error(exception.getMessage)
       case e: Exception => log.error(e.printStackTrace)
