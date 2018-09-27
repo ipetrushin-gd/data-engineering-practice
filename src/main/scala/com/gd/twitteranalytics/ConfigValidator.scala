@@ -1,7 +1,7 @@
 package com.gd.twitteranalytics
 
 import com.gd.twitteranalytics.StreamingTweetsJob.log
-import com.gd.twitteranalytics.util.ReadTwitterConf
+import com.gd.twitteranalytics.util.AppConfigReader
 import com.typesafe.config.ConfigException
 
 object ConfigValidator {
@@ -18,6 +18,6 @@ object ConfigValidator {
 
   @throws[ConfigException]
   def validateTwitterAuth = {
-      Array(ReadTwitterConf.CONSUMER_KEY, ReadTwitterConf.CONSUMER_SECRET, ReadTwitterConf.ACCESS_TOKEN, ReadTwitterConf.ACCESS_SECRET)
+      Array(AppConfigReader.ConsumerKey, AppConfigReader.ConsumerSecret, AppConfigReader.AccessSecret, AppConfigReader.AccessToken)
     }
 }
