@@ -1,0 +1,6 @@
+ {
+ 	"text": "This is the #Sample #text for #test purpose",
+ 	"created_at": "Wed Sep 26 10: 37: 20 PDT 2018",
+ 	"contributors": null,
+ 	"retweeted": false
+ }
