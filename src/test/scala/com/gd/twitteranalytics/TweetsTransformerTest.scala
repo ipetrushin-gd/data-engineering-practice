@@ -21,7 +21,7 @@ class TweetsTransformerTest extends FreeSpec with StreamingSuiteBase with MockFa
     "getDateAndText function" - {
     "when presented with a complete tweet status" - {
       "should retrieve date and text from the tweets status" in {
-        val rawJson = Source.fromURL(getClass.getResource("/tweetStatus.txt")).getLines.mkString
+        val rawJson = Source.fromURL(getClass.getResource("/tweetStatus.json")).getLines.mkString
         val tweetStatus = TwitterObjectFactory.createStatus(rawJson)
         val input = List(List(tweetStatus))
         val expected = List(List((constDate,text)))
