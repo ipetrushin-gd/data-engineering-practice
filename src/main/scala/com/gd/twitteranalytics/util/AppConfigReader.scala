@@ -15,7 +15,6 @@ object AppConfigReader{
   val AppName = appConfig.getString("application.app_name")
   val MasterUrl = appConfig.getString("application.masterUrl")
 
-  @throws[ConfigException]
   val ConsumerKey = twitterConfig.getString("configKeys.twitter4j.oauth.consumerKey")
   val ConsumerSecret = twitterConfig.getString("configKeys.twitter4j.oauth.consumerSecret")
   val AccessToken = twitterConfig.getString("configKeys.twitter4j.oauth.accessToken")

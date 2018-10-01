@@ -2,7 +2,6 @@ package com.gd.twitteranalytics
 
 import java.util.{Date => JavaDate}
 import java.sql.Timestamp
-
 import com.gd.twitteranalytics.util.AppConfigReader
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.sql.{DataFrame, SparkSession}
