@@ -14,7 +14,7 @@ object StreamingTweetsJob {
   val log = Logger.getLogger(StreamingTweetsJob.getClass.getName)
 
   def main(args: Array[String]): Unit = {
-      val authKeys = ConfigValidator.validateTwitterAuth
+      val authKeys = ConfigValidator.getTwitterAccessKeys
       if (ConfigValidator.isConfValid(authKeys)) {
         //Incase Only tweets related to a specific Hashtags are needed..
         val filters = AppConfigReader.HashTags

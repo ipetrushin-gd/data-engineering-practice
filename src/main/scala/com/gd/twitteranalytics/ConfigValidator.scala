@@ -15,7 +15,7 @@ object ConfigValidator {
     else  true
   }
 
-  def validateTwitterAuth = {
+  def getTwitterAccessKeys = {
       Array(AppConfigReader.ConsumerKey, AppConfigReader.ConsumerSecret, AppConfigReader.AccessSecret, AppConfigReader.AccessToken)
     }
 }
