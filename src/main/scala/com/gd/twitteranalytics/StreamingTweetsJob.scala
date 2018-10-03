@@ -7,37 +7,43 @@ import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import java.util.{Date => JavaDate}
+
 import com.gd.twitteranalytics.util.AppConfigReader
+import com.typesafe.config.ConfigException
 
 object StreamingTweetsJob {
 
   val log = Logger.getLogger(StreamingTweetsJob.getClass.getName)
 
   def main(args: Array[String]): Unit = {
-      val authKeys = ConfigValidator.getTwitterAccessKeys
+    try {
+      val authKeys = AppConfigReader.getTwitterAuthKeys
       if (ConfigValidator.isConfValid(authKeys)) {
-        //Incase Only tweets related to a specific Hashtags are needed..
-        val filters = AppConfigReader.HashTags
-
+        val Array(savePath, tweetsLangFilter, hashTagsFilter, masterUrl) = AppConfigReader.getAppConfigurables
         val dateColumn = "event_date"
-        val ssc = setSparkStreamingContext
+        val ssc = setSparkStreamingContext(masterUrl)
 
-        TweetsDataReader.configureTwitter
-        val englishTweets = TweetsDataReader.getTweets(ssc, Array(filters))
+        TweetsDataReader.configureTwitter(authKeys)
+
+        val englishTweets = TweetsDataReader.getTweets(ssc, Array(hashTagsFilter), tweetsLangFilter)
         val tweetsInfo = getDateAndText(englishTweets)
 
-        processTweetsInfo(tweetsInfo,AppConfigReader.SavePath,dateColumn)
+        processTweetsInfo(tweetsInfo, savePath, dateColumn)
 
         ssc.start
         ssc.awaitTermination()
       }
       else
         System.exit(1)
+    }
+    catch {
+      case exception: Exception => handleException(exception)
+    }
   }
 
-  def setSparkStreamingContext() = {
+  def setSparkStreamingContext(masterUrl:String):StreamingContext = {
     val sparkConf = new SparkConf().
-                        setAppName("twitter-analytics").setMaster(AppConfigReader.MasterUrl)
+                        setAppName("TwitterStreamingPipeLine").setMaster(masterUrl)
     new StreamingContext(sparkConf, Seconds(2))
   }
 
@@ -45,7 +51,17 @@ object StreamingTweetsJob {
     tweetsInfo.foreachRDD { rdd =>
       var tweetsDataFrame = convertRddToDataFrame(rdd)
       tweetsDataFrame = updateDateColFormat(tweetsDataFrame,dateColumn)
-      saveOutputToHdfs(tweetsDataFrame,path,dateColumn)
+      saveOutputToHdfs(tweetsDataFrame,path)
+    }
+  }
+  def handleException(exception: Exception) {
+    exception match {
+      case exception: ConfigException =>
+        if (exception.getMessage == null)
+          log.error(">>>Application configuration is not valid. Please provide the config parameters! ")
+        else
+          log.error(exception.getMessage)
+      case e: Exception => log.error(e.printStackTrace)
     }
   }
 }
