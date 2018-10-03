@@ -4,19 +4,25 @@ import com.typesafe.config.{Config, ConfigException, ConfigFactory}
 
 object AppConfigReader{
 
-  val appConfig:Config = ConfigFactory.load("application.conf")
-  val twitterConfig:Config = ConfigFactory.load("twitterAuthKeys.conf")
+  @throws[ConfigException]
+  def getAppConfigurables : Array[String] = {
 
-  val SavePath = appConfig.getString("application.save_path")
-  val OutputDateFormat = appConfig.getString("application.date_format")
-  val TweetslangFilter = appConfig.getString("application.filter")
-  val HashTags = appConfig.getString("application.hashtags")
+    val appConfig: Config = ConfigFactory.load("application.conf")
+    val SavePath = appConfig.getString("application.save_path")
+    val TweetsLangFilter = appConfig.getString("application.filter")
+    val HashTags = appConfig.getString("application.hashtags")
+    val MasterUrl = appConfig.getString("application.masterUrl")
+    Array(SavePath,TweetsLangFilter,HashTags,MasterUrl)
+  }
+@throws[ConfigException]
+  def getTwitterAuthKeys : Array[String] = {
 
-  val AppName = appConfig.getString("application.app_name")
-  val MasterUrl = appConfig.getString("application.masterUrl")
+    val twitterConfig: Config = ConfigFactory.load("twitterAuthKeys.conf")
+    val ConsumerKey = twitterConfig.getString("configKeys.twitter4j.oauth.consumerKey")
+    val ConsumerSecret = twitterConfig.getString("configKeys.twitter4j.oauth.consumerSecret")
+    val AccessToken = twitterConfig.getString("configKeys.twitter4j.oauth.accessToken")
+    val AccessSecret = twitterConfig.getString("configKeys.twitter4j.oauth.accessTokenSecret")
+    Array(ConsumerKey,ConsumerSecret,AccessToken,AccessSecret)
+  }
 
-  val ConsumerKey = twitterConfig.getString("configKeys.twitter4j.oauth.consumerKey")
-  val ConsumerSecret = twitterConfig.getString("configKeys.twitter4j.oauth.consumerSecret")
-  val AccessToken = twitterConfig.getString("configKeys.twitter4j.oauth.accessToken")
-  val AccessSecret = twitterConfig.getString("configKeys.twitter4j.oauth.accessTokenSecret")
 }
