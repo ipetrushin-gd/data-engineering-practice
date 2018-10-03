@@ -1,7 +1,6 @@
 package com.gd.twitteranalytics
 
 import com.gd.twitteranalytics.StreamingTweetsJob.log
-import com.gd.twitteranalytics.util.AppConfigReader
 
 object ConfigValidator {
 
@@ -14,8 +13,4 @@ object ConfigValidator {
     }
     else  true
   }
-
-  def getTwitterAccessKeys = {
-      Array(AppConfigReader.ConsumerKey, AppConfigReader.ConsumerSecret, AppConfigReader.AccessSecret, AppConfigReader.AccessToken)
-    }
 }
