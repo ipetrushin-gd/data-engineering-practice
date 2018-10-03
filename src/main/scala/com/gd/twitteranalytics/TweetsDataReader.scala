@@ -1,20 +1,21 @@
 package com.gd.twitteranalytics
 
-import com.gd.twitteranalytics.util.AppConfigReader
 import org.apache.spark.streaming.twitter.TwitterUtils
 import org.apache.spark.streaming.StreamingContext
+import org.apache.spark.streaming.dstream.DStream
+import twitter4j.Status
 
 object TweetsDataReader {
 
-  def configureTwitter() {
-    System.setProperty("twitter4j.oauth.consumerKey", AppConfigReader.ConsumerKey)
-    System.setProperty("twitter4j.oauth.consumerSecret", AppConfigReader.ConsumerSecret)
-    System.setProperty("twitter4j.oauth.accessToken", AppConfigReader.AccessToken)
-    System.setProperty("twitter4j.oauth.accessTokenSecret", AppConfigReader.AccessSecret)
+  def configureTwitter(twitterAuthKeys: Array[String]) {
+    System.setProperty("twitter4j.oauth.consumerKey", twitterAuthKeys(0))
+    System.setProperty("twitter4j.oauth.consumerSecret", twitterAuthKeys(1))
+    System.setProperty("twitter4j.oauth.accessToken", twitterAuthKeys(2))
+    System.setProperty("twitter4j.oauth.accessTokenSecret", twitterAuthKeys(3))
   }
 
-  def getTweets(ssc:StreamingContext,filters:Array[String]) = {
+  def getTweets(ssc:StreamingContext,filters:Array[String],langFilter:String) : DStream[Status] = {
     val tweets = TwitterUtils.createStream(ssc, None, filters)
-    tweets.filter(_.getLang == AppConfigReader.TweetslangFilter)
+    tweets.filter(_.getLang == langFilter)
   }
 }
