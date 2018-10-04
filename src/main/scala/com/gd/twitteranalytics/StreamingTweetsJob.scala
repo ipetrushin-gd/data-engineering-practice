@@ -16,7 +16,6 @@ object StreamingTweetsJob {
   val log = Logger.getLogger(StreamingTweetsJob.getClass.getName)
 
   def main(args: Array[String]): Unit = {
-    try {
       val authKeys = AppConfigReader.getTwitterAuthKeys
       if (ConfigValidator.isConfValid(authKeys)) {
         val Array(savePath, tweetsLangFilter, hashTagsFilter, masterUrl) = AppConfigReader.getAppConfigurables
@@ -26,8 +25,7 @@ object StreamingTweetsJob {
         TweetsDataReader.configureTwitter(authKeys)
 
         val englishTweets = TweetsDataReader.getTweets(ssc, Array(hashTagsFilter), tweetsLangFilter)
-        val tweetsInfo = getDateAndText(englishTweets)
-
+        val tweetsInfo = getCreationDateAndStatus(englishTweets)
         processTweetsInfo(tweetsInfo, savePath, dateColumn)
 
         ssc.start
@@ -35,10 +33,6 @@ object StreamingTweetsJob {
       }
       else
         System.exit(1)
-    }
-    catch {
-      case exception: Exception => handleException(exception)
-    }
   }
 
   def setSparkStreamingContext(masterUrl:String):StreamingContext = {
@@ -52,16 +46,6 @@ object StreamingTweetsJob {
       var tweetsDataFrame = convertRddToDataFrame(rdd)
       tweetsDataFrame = updateDateColFormat(tweetsDataFrame,dateColumn)
       saveOutputToHdfs(tweetsDataFrame,path)
-    }
-  }
-  def handleException(exception: Exception) {
-    exception match {
-      case exception: ConfigException =>
-        if (exception.getMessage == null)
-          log.error(">>>Application configuration is not valid. Please provide the config parameters! ")
-        else
-          log.error(exception.getMessage)
-      case e: Exception => log.error(e.printStackTrace)
     }
   }
 }
