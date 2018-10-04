@@ -16,7 +16,7 @@ class TweetsDataLoaderTest extends FreeSpec with DataFrameSuiteBase {
         val sqlCtx = sqlContext
         import sqlCtx.implicits._
 
-        val sourceDf = Seq((event_date,text),(event_date,text)).toDF("event_date","text")
+        val sourceDf = Seq((event_date,text),(event_date,text)).toDF("event_date","payload")
         TweetsDataLoader.saveOutputToHdfs(sourceDf,savePath)
         val file = new File(savePath+"/event_date="+s"${event_date}")
         assert(file.exists ===true)
