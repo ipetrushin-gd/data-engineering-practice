@@ -3,8 +3,7 @@ package com.gd.twitteranalytics.util
 import com.typesafe.config.{Config, ConfigException, ConfigFactory}
 
 object AppConfigReader{
-
-  @throws[ConfigException]
+//TODO Define configurations via case class
   def getAppConfigurables : Array[String] = {
 
     val appConfig: Config = ConfigFactory.load("application.conf")
@@ -14,7 +13,7 @@ object AppConfigReader{
     val MasterUrl = appConfig.getString("application.masterUrl")
     Array(SavePath,TweetsLangFilter,HashTags,MasterUrl)
   }
-@throws[ConfigException]
+
   def getTwitterAuthKeys : Array[String] = {
 
     val twitterConfig: Config = ConfigFactory.load("twitterAuthKeys.conf")
