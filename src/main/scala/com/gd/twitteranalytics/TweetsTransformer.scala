@@ -2,6 +2,8 @@ package com.gd.twitteranalytics
 
 import java.util.{Date => JavaDate}
 import java.sql.Timestamp
+
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions.date_format
@@ -10,8 +12,9 @@ import org.apache.spark.rdd.RDD
 
 object TweetsTransformer{
 
-  def getDateAndText(englishTweets: DStream[Status]): DStream[(JavaDate,String)] = {
-    englishTweets.map(x => (x.getCreatedAt,x.getText))
+  def getCreationDateAndStatus(englishTweets: DStream[Status]): DStream[(JavaDate,String)] = {
+    val mapper = new ObjectMapper
+    englishTweets.map(x => (x.getCreatedAt,mapper.writeValueAsString(x)))
   }
 
   def convertRddToDataFrame(pairRdd:RDD[(JavaDate,String)]) : DataFrame= {
