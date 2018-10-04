@@ -3,7 +3,7 @@ package com.gd.twitteranalytics.util
 import com.typesafe.config.ConfigException
 import org.scalatest.FreeSpec
 
-class AppConfigReaderTest extends FreeSpec {
+class ApplicationConfigReaderTest extends FreeSpec {
 
   "Methods tests" - {
     "getAppConfigurables" - {
