@@ -44,8 +44,9 @@ object StreamingTweetsJob {
   def processTweetsInfo(tweetsInfo: DStream[(JavaDate, String)],path:String,dateColumn:String) = {
     tweetsInfo.foreachRDD { rdd =>
       var tweetsDataFrame = convertRddToDataFrame(rdd)
-      tweetsDataFrame = updateDateColFormat(tweetsDataFrame,dateColumn)
-      saveOutputToHdfs(tweetsDataFrame,path)
+      tweetsDataFrame =  updateDateColFormat(tweetsDataFrame,dateColumn)
+      val tweetsDataSet = convertDataFrameToDataSet(tweetsDataFrame)
+      saveOutputToHdfs(tweetsDataSet,path)
     }
   }
 }
