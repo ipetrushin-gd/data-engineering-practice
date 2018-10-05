@@ -5,9 +5,9 @@ import org.scalatest.FreeSpec
 
 class ApplicationConfigReaderTest extends FreeSpec {
 
-  "Methods tests" - {
-    "getAppConfigurables" - {
-      "should throw ConfigException error if Application configurations are missing" in {
+  "AppConfigReader" - {
+    "getAppConfigurables function" - {
+      "should throw ConfigException if Application configurations are missing" in {
         val exceptionCause = "No configuration setting found for key "
         val thrown = intercept[ConfigException] {
           AppConfigReader.getAppConfigurables
@@ -15,8 +15,8 @@ class ApplicationConfigReaderTest extends FreeSpec {
         assert(thrown.getMessage.contains(exceptionCause))
       }
     }
-    "getTwitterAuthKeys" - {
-      "should throw ConfigException error if Twitter Authentication keys are missing" in {
+    "getTwitterAuthKeys function" - {
+      "should throw ConfigException if Twitter Authentication keys are missing" in {
         val exceptionCause = "No configuration setting found for key "
         val thrown = intercept[ConfigException] {
           AppConfigReader.getTwitterAuthKeys
