@@ -1,11 +1,11 @@
 package com.gd.twitteranalytics
 
-import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.Dataset
 
 object TweetsDataLoader {
 
-  def saveOutputToHdfs(inputDataFrame:DataFrame,savePath:String)={
-    inputDataFrame.write.partitionBy("event_date").
+  def saveOutputToHdfs(inputDataSet: Dataset[Tweet],savePath:String)={
+    inputDataSet.write.partitionBy("event_date").
       format("parquet").mode("append").save(savePath)
   }
 }
