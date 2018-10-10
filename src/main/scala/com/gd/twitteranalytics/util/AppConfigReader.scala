@@ -10,8 +10,7 @@ object AppConfigReader{
     val SavePath = appConfig.getString("application.save_path")
     val TweetsLangFilter = appConfig.getString("application.filter")
     val HashTags = appConfig.getString("application.hashtags")
-    val MasterUrl = appConfig.getString("application.masterUrl")
-    Array(SavePath,TweetsLangFilter,HashTags,MasterUrl)
+    Array(SavePath,TweetsLangFilter,HashTags)
   }
 
   def getTwitterAuthKeys : Array[String] = {

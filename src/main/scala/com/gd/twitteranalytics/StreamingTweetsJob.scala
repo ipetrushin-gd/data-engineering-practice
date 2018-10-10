@@ -2,14 +2,12 @@ package com.gd.twitteranalytics
 
 import com.gd.twitteranalytics.TweetsTransformer._
 import com.gd.twitteranalytics.TweetsDataLoader._
+import com.gd.twitteranalytics.util.AppConfigReader
 import org.apache.log4j.Logger
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import java.util.{Date => JavaDate}
-
-import com.gd.twitteranalytics.util.AppConfigReader
-import com.typesafe.config.ConfigException
 
 object StreamingTweetsJob {
 
@@ -18,9 +16,9 @@ object StreamingTweetsJob {
   def main(args: Array[String]): Unit = {
       val authKeys = AppConfigReader.getTwitterAuthKeys
       if (ConfigValidator.isConfValid(authKeys)) {
-        val Array(savePath, tweetsLangFilter, hashTagsFilter, masterUrl) = AppConfigReader.getAppConfigurables
+        val Array(savePath, tweetsLangFilter, hashTagsFilter) = AppConfigReader.getAppConfigurables
         val dateColumn = "event_date"
-        val ssc = setSparkStreamingContext(masterUrl)
+        val ssc = setSparkStreamingContext
 
         TweetsDataReader.configureTwitter(authKeys)
 
@@ -35,9 +33,9 @@ object StreamingTweetsJob {
         System.exit(1)
   }
 
-  def setSparkStreamingContext(masterUrl:String):StreamingContext = {
+  def setSparkStreamingContext():StreamingContext = {
     val sparkConf = new SparkConf().
-                        setAppName("TwitterStreamingPipeLine").setMaster(masterUrl)
+                        setAppName("TwitterStreamingPipeLine")
     new StreamingContext(sparkConf, Seconds(2))
   }
 
