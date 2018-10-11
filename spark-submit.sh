@@ -1,2 +1,0 @@
-export JAVA_HOME=/usr/java/jdk1.8.0_162 && ./bin/spark2-submit --class com.gd.twitteranalytics.StreamingTweetsJob \
---driver-memory 512M  --executor-memory 512M --master yarn /home/ssachdeva/twitter-analytics-assembly-0.1.jar
