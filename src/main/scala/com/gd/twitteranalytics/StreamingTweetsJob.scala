@@ -32,7 +32,7 @@ object StreamingTweetsJob {
       else
         System.exit(1)
   }
-
+// TODO: Configure CheckPointing
   def setSparkStreamingContext():StreamingContext = {
     val sparkConf = new SparkConf().
                         setAppName("TwitterStreamingPipeLine")
