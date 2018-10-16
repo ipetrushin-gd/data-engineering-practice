@@ -1,6 +1,6 @@
-package com.gd.twitterstreaming
+package com.gd.twitteranalytics
 
-import com.gd.twitterstreaming.StreamingTweetsJob.log
+import com.gd.twitteranalytics.StreamingTweetsJob.log
 
 object ConfigValidator {
 
