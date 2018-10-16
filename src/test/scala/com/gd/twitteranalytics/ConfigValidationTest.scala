@@ -1,5 +1,6 @@
-package com.gd.twitterstreaming
+package twitteranalytics
 
+import com.gd.twitteranalytics.ConfigValidator
 import org.scalatest.FreeSpec
 
 class ConfigValidationTest extends FreeSpec {
