@@ -21,7 +21,7 @@ object TweetsTransformer{
     val spark = SparkSession.builder.config(pairRdd.sparkContext.getConf).getOrCreate
     import spark.implicits._
 
-    pairRdd.map(tweets => Tweet(new Date(tweets._1.getTime),tweets._2)).toDF
+    pairRdd.map{case(date,payload) => Tweet(new Date(date.getTime),payload)}.toDF
   }
 
   def updateDateColFormat(inputDataFrame:DataFrame,dateCol:String): DataFrame = {
