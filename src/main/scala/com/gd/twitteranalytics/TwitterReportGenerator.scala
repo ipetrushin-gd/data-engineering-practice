@@ -10,8 +10,8 @@ object TwitterReportGenerator {
   def getReportWithSqlProcessing(spark:SparkSession,tweetStatusDf:DataFrame):DataFrame = {
     log.debug("=======> Stage 3: Twitter Report via SQL Start.... ")
     tweetStatusDf.createOrReplaceTempView("status")
-    val query = "select location,id,count(id) as frequency from status group by location,id having frequency > 10"
-    spark.sql(query).withColumn("Date",lit(current_date))
+    val query = "select location,id,count(id) as frequency from status group by location,id having frequency >= 10"
+    spark.sql(query).withColumn("Date",lit(current_date)).drop("frequency")
   }
 
   def getReportWithDataFrameProcessing(spark:SparkSession,tweetStatusDf:DataFrame):DataFrame = {
@@ -20,8 +20,8 @@ object TwitterReportGenerator {
 
     tweetStatusDf.select($"location",$"id").
                   groupBy("location","id") .
-                  agg(count($"id")as "frequency").where(count($"id")>10).
-                  withColumn("Date",lit(current_date))
+                  agg(count($"id")as "frequency").where(count($"id") geq 10).
+                  withColumn("Date",lit(current_date)).drop("frequency")
   }
 
   def getReportWithDataSetProcessing(spark:SparkSession,tweetStatusDf:DataFrame):DataFrame = {
@@ -32,8 +32,8 @@ object TwitterReportGenerator {
     val tweetDs:Dataset[TwitterStatus] = tweetStatusDf.as[TwitterStatus](encoder)
         tweetDs.select($"location",$"id").
                 groupBy("location","id") .
-                agg(count($"id")as "frequency").where(count($"id")>10).
-                withColumn("Date",lit(current_date))
+                agg(count($"id")as "frequency").where(count($"id") geq 10).
+                withColumn("Date",lit(current_date)).drop("frequency")
   }
 }
 
