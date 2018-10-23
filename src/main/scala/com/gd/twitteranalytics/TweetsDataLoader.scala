@@ -8,9 +8,4 @@ object TweetsDataLoader {
     inputDataSet.write.partitionBy("event_date").
       format("parquet").mode("append").save(savePath)
   }
-
-  def saveReportToHdfs(inputDataSet: DataFrame, savePath:String)={
-    inputDataSet.write.partitionBy("Date").
-      format("csv").mode("append").save(savePath)
-  }
 }
