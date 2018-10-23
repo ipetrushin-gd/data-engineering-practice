@@ -33,9 +33,9 @@ object TwitterReportingJob {
       log.debug("=======> Stage 5: Twitter Report Creation Complete!")
 
       log.debug("=======> Stage 6: Saving Report on HDFS!")
-      TweetsDataLoader.saveReportToHdfs(reportFromSql, reportSavePath + "/sqlReport")
-      TweetsDataLoader.saveReportToHdfs(reportFromDf, reportSavePath + "/dataFrameReport")
-      TweetsDataLoader.saveReportToHdfs(reportFromDs, reportSavePath + "/dataSetReport")
+      TwitterReportWriter.saveReportToHdfs(reportFromSql, reportSavePath + "/sqlReport")
+      TwitterReportWriter.saveReportToHdfs(reportFromDf, reportSavePath + "/dataFrameReport")
+      TwitterReportWriter.saveReportToHdfs(reportFromDs, reportSavePath + "/dataSetReport")
 
       spark.stop
     }
