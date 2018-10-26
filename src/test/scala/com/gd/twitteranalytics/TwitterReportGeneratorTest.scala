@@ -17,7 +17,7 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
           .option("inferSchema",true)
           .csv(expectedDataPath).withColumn("Date",lit(current_date))
 
-        val actualDf = TwitterReportGenerator.getReportWithSqlProcessing(spark,inputDf)
+        val actualDf = TwitterReportGenerator.getReportWithDataFrameProcessing(spark,inputDf)
         assert(expectedDf.except(actualDf).rdd.isEmpty === true)
       }
     }
@@ -28,7 +28,7 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
           .option("inferSchema",true)
           .csv(expectedDataPath).withColumn("Date",lit(current_date))
 
-        val actualDf = TwitterReportGenerator.getReportWithDataFrameProcessing(spark,inputDf)
+        val actualDf = TwitterReportGenerator.getReportWithSqlProcessing(spark,inputDf)
         assert(expectedDf.except(actualDf).rdd.isEmpty === true)
       }
     }
