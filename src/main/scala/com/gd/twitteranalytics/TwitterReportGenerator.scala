@@ -13,8 +13,8 @@ object TwitterReportGenerator {
     val query = "select location,id,count(id) as frequency from status group by location,id having frequency >= 10"
     spark.sql(query).withColumn("Date", lit(current_date)).createOrReplaceTempView("filteredTable")
 
-    spark.sql("select location, id, Date from (select *, row_number() " +
-      "OVER (PARTITION BY location ORDER BY frequency DESC) as rn  FROM filteredTable) tmp where rn <= 5")
+    spark.sql("""select location, id, Date from (select *, row_number()
+      OVER (PARTITION BY location ORDER BY frequency DESC) as rn  FROM filteredTable) tmp where rn <= 5""")
   }
 
   def getReportWithDataFrameProcessing(spark: SparkSession, tweetStatusDf: DataFrame): DataFrame = {
