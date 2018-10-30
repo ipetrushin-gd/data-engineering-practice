@@ -11,7 +11,7 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
 
   "TwitterReportGenerator " - {
     "getReportWithDataFrameProcessing" - {
-      "should generate report with users that are occuring more than 10 times per location" in {
+      "should generate report with maximum of 5 users that are occuring more than 10 times per location" in {
         val inputDf = spark.read.option("header",true).option("inferSchema",true).csv(inputDataPath)
         val expectedDf = spark.read.option("header",true)
           .option("inferSchema",true)
@@ -22,7 +22,7 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
       }
     }
     "getReportWithSqlProcessing" - {
-      "should generate report with users that are occuring more than 10 times per location" in {
+      "should generate report with maximum of 5 users that are occuring more than 10 times per location" in {
         val inputDf = spark.read.option("header",true).option("inferSchema",true).csv(inputDataPath)
         val expectedDf = spark.read.option("header",true)
           .option("inferSchema",true)
@@ -33,13 +33,13 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
       }
     }
     "getReportWithDataSetProcessing" - {
-      "should generate report with users that are occuring more than 10 times per location" in {
+      "should generate report with maximum of 5 users that are occuring more than 10 times per location" in {
         val inputDf = spark.read.option("header",true).option("inferSchema",true).csv(inputDataPath)
         val expectedDf = spark.read.option("header",true)
           .option("inferSchema",true)
           .csv(expectedDataPath).withColumn("Date",lit(current_date))
 
-        val actualDf = TwitterReportGenerator.getReportWithDataSetProcessing(spark,inputDf)
+        val actualDf = TwitterReportGenerator.getReportWithDataSetProcessing1(spark,inputDf)
         assert(expectedDf.except(actualDf).rdd.isEmpty === true)
       }
     }
