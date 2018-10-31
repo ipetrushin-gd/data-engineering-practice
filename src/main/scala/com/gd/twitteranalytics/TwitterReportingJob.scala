@@ -30,7 +30,7 @@ object TwitterReportingJob {
       log.debug("=======> Stage 2: Generating Report for Active Users..")
       val reportFromSql = TwitterReportGenerator.execute(getReportWithSqlProcessing,spark,filteredStatusDf)
       val reportFromDf = TwitterReportGenerator.execute(getReportWithDataFrameProcessing,spark,filteredStatusDf)
-      val reportFromDs = TwitterReportGenerator.execute(getReportWithDataSetProcessing1,spark,filteredStatusDf)
+      val reportFromDs = TwitterReportGenerator.execute(getReportWithDataSetProcessing,spark,filteredStatusDf)
 
       log.debug("=======> Stage 3: Twitter Report Creation Complete!")
 
