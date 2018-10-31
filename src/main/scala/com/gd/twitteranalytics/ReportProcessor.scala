@@ -29,7 +29,7 @@ object ReportProcessor {
       where($"rn" <= 5).drop("rn").drop("frequency")
   }
 
-  def getReportWithDataSetProcessing1(spark: SparkSession, tweetStatusDf: DataFrame):DataFrame = {
+  def getReportWithDataSetProcessing(spark: SparkSession, tweetStatusDf: DataFrame):DataFrame = {
     import spark.implicits._
     implicit val encoderForStatus = Encoders.product[TwitterStatus]
     implicit val encoderForReport = Encoders.product[Report]
