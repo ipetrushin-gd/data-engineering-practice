@@ -1,4 +1,4 @@
-package com.gd.twitteranalytics
+package com.gd.twitteranalytics.reports
 
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.expressions.scalalang.typed.{count => typedCount}
