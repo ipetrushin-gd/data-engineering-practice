@@ -42,7 +42,8 @@ object ReportProcessor {
 
     aggregatedDF.groupByKey(_.location)
       .mapValues(List(_)).mapValues(_.sortBy(x => -x.frequency).take(5))
-      .flatMapGroups{case(value,iter) => iter.flatten}.toDF
+      .flatMapGroups{case(value,iter) => iter.flatten}.
+      drop("frequency").withColumn("Date", lit(current_date))
   }
 }
 
