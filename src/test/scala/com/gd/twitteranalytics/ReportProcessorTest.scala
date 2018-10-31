@@ -1,15 +1,15 @@
 package com.gd.twitteranalytics
 
-import com.holdenkarau.spark.testing.{DataFrameSuiteBase}
+import com.holdenkarau.spark.testing.DataFrameSuiteBase
+import org.apache.spark.sql.functions.{current_date, lit}
 import org.scalatest.{BeforeAndAfter, FreeSpec}
-import org.apache.spark.sql.functions._
 
-class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataFrameSuiteBase {
+class ReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSuiteBase {
 
   val inputDataPath = getClass.getResource("/dataInputForReport.csv").getPath
   val expectedDataPath = getClass.getResource("/expectedResultFromReport.csv").getPath
 
-  "TwitterReportGenerator " - {
+  "ReportProcessor " - {
     "getReportWithDataFrameProcessing" - {
       "should generate report with maximum of 5 users that are occuring more than 10 times per location" in {
         val inputDf = spark.read.option("header",true).option("inferSchema",true).csv(inputDataPath)
@@ -17,7 +17,7 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
           .option("inferSchema",true)
           .csv(expectedDataPath).withColumn("Date",lit(current_date))
 
-        val actualDf = TwitterReportGenerator.getReportWithDataFrameProcessing(spark,inputDf)
+        val actualDf = ReportProcessor.getReportWithDataFrameProcessing(spark,inputDf)
         assert(expectedDf.except(actualDf).rdd.isEmpty === true)
       }
     }
@@ -28,7 +28,7 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
           .option("inferSchema",true)
           .csv(expectedDataPath).withColumn("Date",lit(current_date))
 
-        val actualDf = TwitterReportGenerator.getReportWithSqlProcessing(spark,inputDf)
+        val actualDf = ReportProcessor.getReportWithSqlProcessing(spark,inputDf)
         assert(expectedDf.except(actualDf).rdd.isEmpty === true)
       }
     }
@@ -39,9 +39,10 @@ class TwitterReportGeneratorTest extends FreeSpec with BeforeAndAfter with DataF
           .option("inferSchema",true)
           .csv(expectedDataPath).withColumn("Date",lit(current_date))
 
-        val actualDf = TwitterReportGenerator.getReportWithDataSetProcessing1(spark,inputDf)
+        val actualDf = ReportProcessor.getReportWithDataSetProcessing(spark,inputDf)
         assert(expectedDf.except(actualDf).rdd.isEmpty === true)
       }
     }
   }
 }
+
