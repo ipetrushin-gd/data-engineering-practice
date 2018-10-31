@@ -1,5 +1,6 @@
 package com.gd.twitteranalytics
 
+import com.gd.twitteranalytics.reports.TwitterReportWriter
 import com.holdenkarau.spark.testing.DataFrameSuiteBase
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql.functions.{current_date, lit}
@@ -25,7 +26,6 @@ class TwitterReportWriterTest extends FreeSpec with DataFrameSuiteBase with Befo
         TwitterReportWriter.saveReportToHdfs(expectedDf,reportSavePath)
         val fs = FileSystem.get(sc.hadoopConfiguration)
         assert (fs.exists(new Path(reportSavePath)) === true)
-
       }
     }
   }
