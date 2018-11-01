@@ -21,7 +21,7 @@ class TwitterReportWriterTest extends FreeSpec with DataFrameSuiteBase with Befo
       "should save the report at given path in FileSystem" in {
         val expectedDf = spark.read.option("header",true)
           .option("inferSchema",true)
-          .csv(dataPathForReport).withColumn("Date",lit(current_date))
+          .csv(dataPathForReport).withColumn("date",lit(current_date))
 
         TwitterReportWriter.saveReportToHdfs(expectedDf,reportSavePath)
         val fs = FileSystem.get(sc.hadoopConfiguration)

@@ -16,9 +16,9 @@ class ReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSui
         val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
         val expectedDf = spark.read.option("header", true)
           .option("inferSchema", true)
-          .csv(expectedDataPath).withColumn("Date", lit(current_date))
-
+          .csv(expectedDataPath).withColumn("date", lit(current_date))
         val actualDf = getReportWithDataFrameProcessing(spark, inputDf)
+
         assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
     }
@@ -27,9 +27,9 @@ class ReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSui
         val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
         val expectedDf = spark.read.option("header", true)
           .option("inferSchema", true)
-          .csv(expectedDataPath).withColumn("Date", lit(current_date))
-
+          .csv(expectedDataPath).withColumn("date", lit(current_date))
         val actualDf = getReportWithSqlProcessing(spark, inputDf)
+
         assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
     }
@@ -38,9 +38,9 @@ class ReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSui
         val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
         val expectedDf = spark.read.option("header", true)
           .option("inferSchema", true)
-          .csv(expectedDataPath).withColumn("Date", lit(current_date))
-
+          .csv(expectedDataPath).withColumn("date", lit(current_date))
         val actualDf = getReportWithDataSetProcessing(spark, inputDf)
+
         assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
     }

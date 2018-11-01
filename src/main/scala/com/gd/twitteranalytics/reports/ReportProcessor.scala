@@ -9,11 +9,26 @@ object ReportProcessor {
 
   def getReportWithSqlProcessing(spark: SparkSession, tweetStatusDf: DataFrame): DataFrame = {
     tweetStatusDf.createOrReplaceTempView("status")
-    val activeUsersIdAndLocation = "select location,id,count(id) as frequency from status group by location,id having frequency >= 10"
-    spark.sql(activeUsersIdAndLocation).withColumn("Date", lit(current_date)).createOrReplaceTempView("activeUsers")
+    val activeUsersIdAndLocation = """SELECT
+                                        location,
+                                        id,
+                                        COUNT(id) AS frequency
+                                      FROM status
+                                      GROUP BY location,
+                                               id
+                                      HAVING frequency >= 10"""
+    spark.sql(activeUsersIdAndLocation).withColumn("date", lit(current_date)).createOrReplaceTempView("activeUsers")
 
-    spark.sql("""select location, id, Date from (select *, row_number()
-      OVER (PARTITION BY location ORDER BY frequency DESC) as rn  FROM activeUsers) groupSortedByFreq where rn <= 5""")
+    spark.sql("""SELECT
+                    location,
+                    id,
+                    date
+                FROM (SELECT
+                    *,
+                    ROW_NUMBER()
+                    OVER (PARTITION BY location ORDER BY frequency DESC) AS rowNum
+                    FROM activeUsers) groupSortedByFreq
+                WHERE rowNum <= 5""")
   }
 
   def getReportWithDataFrameProcessing(spark: SparkSession, tweetStatusDf: DataFrame): DataFrame = {
@@ -22,7 +37,7 @@ object ReportProcessor {
     val activeUsers = tweetStatusDf.select($"location", $"id").
       groupBy("location", "id").
       agg(count($"id") as "frequency").where(count($"id") geq 10).
-      withColumn("Date", lit(current_date))
+      withColumn("date", lit(current_date))
 
     val byBucket = Window.partitionBy($"location").orderBy($"frequency".desc)
     activeUsers.withColumn("rn", row_number.over(byBucket)).
@@ -43,7 +58,7 @@ object ReportProcessor {
     activeUsers.groupByKey(_.location)
       .mapValues(List(_)).mapValues(_.sortBy(x => -x.frequency).take(5))
       .flatMapGroups{case(value,iter) => iter.flatten}.
-      drop("frequency").withColumn("Date", lit(current_date))
+      drop("frequency").withColumn("date", lit(current_date))
   }
 }
 case class TwitterStatus(location:String,id:Long)
