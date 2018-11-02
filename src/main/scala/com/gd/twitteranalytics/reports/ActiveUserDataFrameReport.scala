@@ -1,6 +1,6 @@
 package com.gd.twitteranalytics.reports
 
-import ReportProcessor._
+import ActiveUserReportProcessor._
 import TwitterReportGenerator.execute
 import TwitterReportWriter.saveReportToHdfs
 import org.apache.hadoop.fs.{FileSystem, Path}

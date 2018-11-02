@@ -1,6 +1,6 @@
 package com.gd.twitteranalytics.reports
 
-import ReportProcessor._
+import ActiveUserReportProcessor._
 import TwitterReportGenerator._
 import TwitterReportWriter._
 import org.apache.hadoop.fs.{FileSystem, Path}
@@ -8,7 +8,6 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 object ActiveUserSqlReport extends TwitterReport {
 
   val log = getLogger("ActiveUserSqlReport")
-
   def main(args: Array[String]): Unit = {
     val spark = setSparkSession("TwitterActiveUserSqlReport")
     val fs = FileSystem.get(spark.sparkContext.hadoopConfiguration)

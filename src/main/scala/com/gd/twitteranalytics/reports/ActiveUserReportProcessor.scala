@@ -5,7 +5,7 @@ import org.apache.spark.sql.expressions.scalalang.typed.{count => typedCount}
 import org.apache.spark.sql.functions.{count, current_date, lit, row_number}
 import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
 
-object ReportProcessor {
+object ActiveUserReportProcessor {
 
   def getReportWithSqlProcessing(spark: SparkSession, tweetStatusDf: DataFrame): DataFrame = {
     tweetStatusDf.createOrReplaceTempView("status")

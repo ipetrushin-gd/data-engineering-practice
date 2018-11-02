@@ -1,16 +1,16 @@
 package com.gd.twitteranalytics
 
-import com.gd.twitteranalytics.reports.ReportProcessor._
+import com.gd.twitteranalytics.reports.ActiveUserReportProcessor._
 import com.holdenkarau.spark.testing.DataFrameSuiteBase
 import org.apache.spark.sql.functions.{current_date, lit}
 import org.scalatest.{BeforeAndAfter, FreeSpec}
 
-class ReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSuiteBase {
+class ActiveUserReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSuiteBase {
 
   val inputDataPath = getClass.getResource("/dataInputForReport.csv").getPath
   val expectedDataPath = getClass.getResource("/expectedResultFromReport.csv").getPath
 
-  "ReportProcessor " - {
+  "ActiveUserReportProcessor " - {
     "getReportWithDataFrameProcessing" - {
       "should generate report with max of Top 5 users that are occuring more than 10 times per location" in {
         val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
