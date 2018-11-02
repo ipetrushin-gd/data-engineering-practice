@@ -56,9 +56,9 @@ object ReportProcessor {
       .map { case (TwitterStatus(location, id), frequency) => Report(location, id, frequency) }
 
     activeUsers.groupByKey(_.location)
-      .mapValues(List(_)).mapValues(_.sortBy(x => -x.frequency).take(5))
-      .flatMapGroups{case(value,iter) => iter.flatten}.
-      drop("frequency").withColumn("date", lit(current_date))
+        .mapGroups{case(key,report)=> report.toList.sortBy(-_.frequency).take(5)}
+        .flatMap(list =>list)
+        .drop("frequency").withColumn("date", lit(current_date))
   }
 }
 case class TwitterStatus(location:String,id:Long)
