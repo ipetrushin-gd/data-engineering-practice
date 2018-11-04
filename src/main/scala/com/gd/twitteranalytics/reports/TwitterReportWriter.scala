@@ -5,7 +5,7 @@ import org.apache.spark.sql.DataFrame
 object TwitterReportWriter {
 
   def saveReportToHdfs(inputDataSet: DataFrame, savePath:String)={
-    inputDataSet.write.partitionBy("Date").
+    inputDataSet.write.partitionBy("date").
       format("csv").mode("append").save(savePath)
   }
 }
