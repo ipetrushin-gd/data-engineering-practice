@@ -21,7 +21,7 @@ object ActiveUserSqlReport extends TwitterReport {
       val report = execute(getReportWithSqlProcessing, spark, inputDataForReport)
 
       log.debug("=======> Stage 3: Saving Report on HDFS...")
-      saveReportToHdfs(report, reportSavePath + "/sqlReport")
+      saveReportToHdfs(report, activeUserReportSavePath + "/sqlReport")
       spark.stop
     }
     else {

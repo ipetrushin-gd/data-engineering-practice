@@ -7,8 +7,8 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 trait TwitterReport {
 
   val today = java.time.LocalDate.now
-  val dataPath = AppConfigReader.getAppConfigurables(0) + "/event_date=" + today
-  val reportSavePath = AppConfigReader.getAppConfigurables(3) + "/ActiveUsers"
+  val dataPath = AppConfigReader.getAppConfigurables(0) + "/event_date=" + AppConfigReader.getReportConfigurables(1)
+  val activeUserReportSavePath = AppConfigReader.getReportConfigurables(0) + "/ActiveUsers"
 
   def getInputDataForReport(dataPath:String,spark:SparkSession):DataFrame = {
     val tweetsDataFrame = ReportInputDataParser.getPayloadStatusAsDataFrame(spark, dataPath)

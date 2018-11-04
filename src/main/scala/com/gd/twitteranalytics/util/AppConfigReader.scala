@@ -10,8 +10,15 @@ object AppConfigReader{
     val SavePath = appConfig.getString("application.save_path")
     val TweetsLangFilter = appConfig.getString("application.filter")
     val HashTags = appConfig.getString("application.hashtags")
-    val SavePathForReports = appConfig.getString("application.reportSavePath")
-    Array(SavePath,TweetsLangFilter,HashTags,SavePathForReports)
+      Array(SavePath,TweetsLangFilter,HashTags)
+  }
+
+  def getReportConfigurables ={
+
+    val reportConfig: Config = ConfigFactory.load("application.conf")
+    val SavePathForReports = reportConfig.getString("reporting.reportSavePath")
+    val EventDateOfDataForReport = reportConfig.getString("reporting.eventDateOfDataForReport")
+    Array(SavePathForReports,EventDateOfDataForReport)
   }
 
   def getTwitterAuthKeys : Array[String] = {
