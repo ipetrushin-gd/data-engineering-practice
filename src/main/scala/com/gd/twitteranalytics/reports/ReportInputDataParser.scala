@@ -4,10 +4,10 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object  ReportInputDataParser{
 
-  def getPayloadStatusAsDataset(spark:SparkSession,path:String):DataFrame ={
+  def getPayloadStatusAsDataFrame(spark:SparkSession,path:String):DataFrame ={
     import spark.implicits._
-    val unParsedDf = spark.read.parquet(path)
-    val parsedJson = unParsedDf.map(_.getAs[String](0))
+    val unparsedDf = spark.read.parquet(path)
+    val parsedJson = unparsedDf.map(_.getAs[String](0))
     spark.read.json(parsedJson)
   }
 
@@ -15,5 +15,4 @@ object  ReportInputDataParser{
     import spark.implicits._
     tweetStatusDf.select($"user.location",$"id").na.fill("NOT_AVAILABLE")
   }
-
 }

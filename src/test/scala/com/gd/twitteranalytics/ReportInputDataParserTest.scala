@@ -17,7 +17,7 @@ class ReportInputDataParserTest extends FreeSpec with DataFrameSuiteBase with Be
   }
 
   "ReportInputDataParser " - {
-    "getPayloadStatusAsDataset " - {
+    "getPayloadStatusAsDataFrame " - {
       "should convert JSON attributes to Dataframe with fields " in {
         val sqlCtx = sqlContext
         import sqlCtx.implicits._
@@ -28,7 +28,7 @@ class ReportInputDataParserTest extends FreeSpec with DataFrameSuiteBase with Be
         val userAsDataFrame = Seq(TweetJsonStatus(userAsJson)).toDF
 
         userAsDataFrame.write.parquet(savePath)
-        val tweetsDataFrame = getPayloadStatusAsDataset(spark,savePath)
+        val tweetsDataFrame = getPayloadStatusAsDataFrame(spark,savePath)
        assert("California",tweetsDataFrame.select("user.location").map(_.getString(0)).collect()(0))
       }
     }
@@ -48,7 +48,7 @@ class ReportInputDataParserTest extends FreeSpec with DataFrameSuiteBase with Be
 
         val userAsDataFrame = Seq(TweetJsonStatus(userAsJson)).toDF
         userAsDataFrame.write.parquet(path)
-        val tweetsDataFrame = getPayloadStatusAsDataset(spark,path)
+        val tweetsDataFrame = getPayloadStatusAsDataFrame(spark,path)
 
         val filteredDF = getUserIdAndLocation(spark,tweetsDataFrame)
         assert(schema,filteredDF.schema)

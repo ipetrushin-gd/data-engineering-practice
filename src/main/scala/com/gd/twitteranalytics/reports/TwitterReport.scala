@@ -11,7 +11,7 @@ trait TwitterReport {
   val reportSavePath = AppConfigReader.getAppConfigurables(3) + "/ActiveUsers"
 
   def getInputDataForReport(dataPath:String,spark:SparkSession):DataFrame = {
-    val tweetsDataFrame = ReportInputDataParser.getPayloadStatusAsDataset(spark, dataPath)
+    val tweetsDataFrame = ReportInputDataParser.getPayloadStatusAsDataFrame(spark, dataPath)
     ReportInputDataParser.getUserIdAndLocation(spark, tweetsDataFrame)
   }
 
