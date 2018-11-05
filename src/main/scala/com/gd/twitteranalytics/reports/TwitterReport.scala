@@ -36,7 +36,7 @@ trait TwitterReport {
   }
 
   def setSparkSession(name:String):SparkSession = {
-    SparkSession.builder.appName(name).master("local[*]").getOrCreate
+    SparkSession.builder.appName(name).getOrCreate
   }
 
   def printErrorLogs(log:Logger) = {
