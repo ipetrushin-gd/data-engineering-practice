@@ -1,27 +1,49 @@
 package com.gd.twitteranalytics
 
 import com.gd.twitteranalytics.reports.ActiveUserReportProcessor._
+import com.holdenkarau.spark.testing.DataFrameSuiteBase
+import org.apache.spark.sql.functions.{current_date, lit}
+import org.scalatest.{BeforeAndAfter, FreeSpec}
 
-class ActiveUserReportProcessorTest extends ReportProcessorTestSuite {
+class ActiveUserReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSuiteBase {
+
+  val inputDataPath = getClass.getResource("/dataInputForReport.csv").getPath
+  val expectedDataPath = getClass.getResource("/expectedResultFromReport.csv").getPath
 
   "ActiveUserReportProcessor " - {
     "getReportWithDataFrameProcessing" - {
       "should generate report with max of Top 5 users that are occuring more than 10 times per location" in {
-        val actualDf = getReportWithDataFrameProcessing(spark, inputDfForActiveUserReport)
-        assert(actualDf.except(expectedDfForActiveUserReport).rdd.isEmpty === true)
+        val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
+        val expectedDf = spark.read.option("header", true)
+          .option("inferSchema", true)
+          .csv(expectedDataPath).withColumn("date", lit(current_date))
+        val actualDf = getReportWithDataFrameProcessing(spark, inputDf)
+
+        assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
     }
     "getReportWithSqlProcessing" - {
       "should generate report with max of Top 5 users that are occuring more than 10 times per location" in {
-        val actualDf = getReportWithSqlProcessing(spark, inputDfForActiveUserReport)
-        assert(actualDf.except(expectedDfForActiveUserReport).rdd.isEmpty === true)
+        val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
+        val expectedDf = spark.read.option("header", true)
+          .option("inferSchema", true)
+          .csv(expectedDataPath).withColumn("date", lit(current_date))
+        val actualDf = getReportWithSqlProcessing(spark, inputDf)
+
+        assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
     }
     "getReportWithDataSetProcessing" - {
       "should generate report with max of Top 5 users that are occuring more than 10 times per location" in {
-        val actualDf = getReportWithDataSetProcessing(spark, inputDfForActiveUserReport)
-        assert(actualDf.except(expectedDfForActiveUserReport).rdd.isEmpty === true)
+        val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
+        val expectedDf = spark.read.option("header", true)
+          .option("inferSchema", true)
+          .csv(expectedDataPath).withColumn("date", lit(current_date))
+        val actualDf = getReportWithDataSetProcessing(spark, inputDf)
+
+        assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
     }
   }
 }
+
