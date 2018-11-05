@@ -10,7 +10,7 @@ object ActiveUserSqlReport extends TwitterReport {
     val spark = setSparkSession("TwitterActiveUserSqlReport")
     if (validateReportPath(spark,log)){
       val inputDataForReport = getInputDataForActiveUserReport(dataPath, spark,log)
-      val report = execute(getReportWithSqlProcessing, spark, inputDataForReport)
+      val report = execute(getReportWithSqlProcessing, spark, inputDataForReport,reportDate)
       saveActiveUserReport(report,"/sqlReport",log)
       spark.stop
     }

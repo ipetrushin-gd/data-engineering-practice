@@ -2,13 +2,14 @@ package com.gd.twitteranalytics
 
 import com.gd.twitteranalytics.reports.ActiveUserReportProcessor._
 import com.holdenkarau.spark.testing.DataFrameSuiteBase
-import org.apache.spark.sql.functions.{current_date, lit}
+import org.apache.spark.sql.functions.lit
 import org.scalatest.{BeforeAndAfter, FreeSpec}
 
 class ActiveUserReportProcessorTest extends FreeSpec with BeforeAndAfter with DataFrameSuiteBase {
 
   val inputDataPath = getClass.getResource("/dataInputForReport.csv").getPath
   val expectedDataPath = getClass.getResource("/expectedResultFromReport.csv").getPath
+  val reportDate = "2018-09-20"
 
   "ActiveUserReportProcessor " - {
     "getReportWithDataFrameProcessing" - {
@@ -16,8 +17,8 @@ class ActiveUserReportProcessorTest extends FreeSpec with BeforeAndAfter with Da
         val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
         val expectedDf = spark.read.option("header", true)
           .option("inferSchema", true)
-          .csv(expectedDataPath).withColumn("date", lit(current_date))
-        val actualDf = getReportWithDataFrameProcessing(spark, inputDf)
+          .csv(expectedDataPath).withColumn("date", lit(reportDate))
+        val actualDf = getReportWithDataFrameProcessing(spark, inputDf,reportDate)
 
         assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
@@ -27,8 +28,8 @@ class ActiveUserReportProcessorTest extends FreeSpec with BeforeAndAfter with Da
         val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
         val expectedDf = spark.read.option("header", true)
           .option("inferSchema", true)
-          .csv(expectedDataPath).withColumn("date", lit(current_date))
-        val actualDf = getReportWithSqlProcessing(spark, inputDf)
+          .csv(expectedDataPath).withColumn("date", lit(reportDate))
+        val actualDf = getReportWithSqlProcessing(spark, inputDf,reportDate)
 
         assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }
@@ -38,8 +39,8 @@ class ActiveUserReportProcessorTest extends FreeSpec with BeforeAndAfter with Da
         val inputDf = spark.read.option("header", true).option("inferSchema", true).csv(inputDataPath)
         val expectedDf = spark.read.option("header", true)
           .option("inferSchema", true)
-          .csv(expectedDataPath).withColumn("date", lit(current_date))
-        val actualDf = getReportWithDataSetProcessing(spark, inputDf)
+          .csv(expectedDataPath).withColumn("date", lit(reportDate))
+        val actualDf = getReportWithDataSetProcessing(spark, inputDf,reportDate)
 
         assert(actualDf.except(expectedDf).rdd.isEmpty === true)
       }

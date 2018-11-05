@@ -8,7 +8,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 trait TwitterReport {
 
-  val today = java.time.LocalDate.now
+  val reportDate = AppConfigReader.getReportConfigurables(1)
   val dataPath = AppConfigReader.getAppConfigurables(0) + "/event_date=" + AppConfigReader.getReportConfigurables(1)
   val activeUserReportSavePath = AppConfigReader.getReportConfigurables(0) + "/ActiveUsers"
   var errorMessage = ""

@@ -10,7 +10,7 @@ object ActiveUserDataFrameReport extends TwitterReport {
     val spark = setSparkSession("TwitterActiveUserDataFrameReport")
     if (validateReportPath(spark,log)){
       val inputDataForReport = getInputDataForActiveUserReport(dataPath, spark,log)
-      val report = execute(getReportWithDataFrameProcessing, spark, inputDataForReport)
+      val report = execute(getReportWithDataFrameProcessing, spark, inputDataForReport, reportDate)
       saveActiveUserReport(report,"/dataFrameReport",log)
       spark.stop
     }
