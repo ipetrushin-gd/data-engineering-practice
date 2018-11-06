@@ -17,8 +17,8 @@ object AppConfigReader{
 
     val reportConfig: Config = ConfigFactory.load("application.conf")
     val SavePathForReports = reportConfig.getString("reporting.reportSavePath")
-    val EventDateOfDataForReport = reportConfig.getString("reporting.eventDateOfDataForReport")
-    Array(SavePathForReports,EventDateOfDataForReport)
+    val reportExternalConfigPath = reportConfig.getString("reporting.reportExternalConfigPath")
+    Array(SavePathForReports,reportExternalConfigPath)
   }
 
   def getTwitterAuthKeys : Array[String] = {

@@ -8,8 +8,8 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 trait TwitterReport {
 
-  val reportDate = AppConfigReader.getReportConfigurables(1)
-  val dataPath = AppConfigReader.getAppConfigurables(0) + "/event_date=" + AppConfigReader.getReportConfigurables(1)
+  val reportDate = ExternalConfigLoader.getEventDateForReportCreation
+  val dataPath = AppConfigReader.getAppConfigurables(0) + "/event_date=" + reportDate
   val activeUserReportSavePath = AppConfigReader.getReportConfigurables(0) + "/ActiveUsers"
   var errorMessage = ""
 
@@ -36,7 +36,7 @@ trait TwitterReport {
   }
 
   def setSparkSession(name:String):SparkSession = {
-    SparkSession.builder.appName(name).getOrCreate
+    SparkSession.builder.appName(name).master("local[*]").getOrCreate
   }
 
   def printErrorLogs(log:Logger) = {
