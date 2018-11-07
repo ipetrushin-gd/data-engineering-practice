@@ -17,7 +17,10 @@ object ActiveUserReportProcessor {
                                       GROUP BY location,
                                                id
                                       HAVING frequency >= 10"""
-    spark.sql(activeUsersIdAndLocation).withColumn("date", lit(reportDate)).createOrReplaceTempView("activeUsers")
+    spark
+      .sql(activeUsersIdAndLocation)
+      .withColumn("date", lit(reportDate))
+      .createOrReplaceTempView("activeUsers")
 
     spark.sql("""SELECT
                     location,
@@ -34,14 +37,16 @@ object ActiveUserReportProcessor {
   def getReportWithDataFrameProcessing(spark: SparkSession, tweetStatusDf: DataFrame,reportDate:String): DataFrame = {
     import spark.implicits._
 
-    val activeUsers = tweetStatusDf.select($"location", $"id").
-      groupBy("location", "id").
-      agg(count($"id") as "frequency").where(count($"id") geq 10).
-      withColumn("date", lit(reportDate))
+    val activeUsers = tweetStatusDf
+                      .select($"location", $"id")
+                      .groupBy("location", "id")
+                      .agg(count($"id") as "frequency")
+                      .where(count($"id") geq 10)
+                      .withColumn("date", lit(reportDate))
 
     val byBucket = Window.partitionBy($"location").orderBy($"frequency".desc)
-    activeUsers.withColumn("rn", row_number.over(byBucket)).
-      where($"rn" <= 5).drop("rn").drop("frequency")
+    activeUsers.withColumn("rn", row_number.over(byBucket))
+               .where($"rn" <= 5).drop("rn").drop("frequency")
   }
 
   def getReportWithDataSetProcessing(spark: SparkSession, tweetStatusDf: DataFrame,reportDate:String):DataFrame = {
@@ -51,9 +56,9 @@ object ActiveUserReportProcessor {
     val tweetDs: Dataset[TwitterStatus] = tweetStatusDf.as[TwitterStatus](encoderForStatus)
 
     val activeUsers = tweetDs.groupByKey(x => TwitterStatus(x.location, x.id))
-      .agg(typedCount[TwitterStatus](_.id).name("frequency"))
-      .where($"frequency" geq 10)
-      .map { case (TwitterStatus(location, id), frequency) => Report(location, id, frequency) }
+                              .agg(typedCount[TwitterStatus](_.id).name("frequency"))
+                              .where($"frequency" geq 10)
+                              .map { case (TwitterStatus(location, id), frequency) => Report(location, id, frequency) }
 
     activeUsers.groupByKey(_.location)
         .mapGroups{case(key,report)=> report.toList.sortBy(-_.frequency).take(5)}
