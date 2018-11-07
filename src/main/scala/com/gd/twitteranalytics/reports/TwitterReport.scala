@@ -19,14 +19,11 @@ trait TwitterReport {
       errorMessage = errorMessage.concat("Data for Report Creation is not available !")
       false
     }
-    else {
-      log.debug("======> Stage 1: Building Report for Twitter Performance...")
+    else
       true
-    }
   }
 
   def getInputDataForActiveUserReport(dataPath:String,spark:SparkSession,log:Logger):DataFrame = {
-    log.debug("=======> Stage 2: Reading Data for Twitter Active User Report")
     val tweetsDataFrame = ReportInputDataParser.getPayloadStatusAsDataFrame(spark, dataPath)
     ReportInputDataParser.getUserIdAndLocation(spark, tweetsDataFrame)
   }
@@ -45,7 +42,6 @@ trait TwitterReport {
   }
 
   def saveActiveUserReport(report:DataFrame,reportType:String,log:Logger)={
-    log.debug("=======> Stage 3: Saving Report on HDFS...")
     saveReportToHdfs(report, activeUserReportSavePath + reportType)
   }
 }
