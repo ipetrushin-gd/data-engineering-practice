@@ -1,6 +1,6 @@
 package com.gd.twitteranalytics
 
-import org.apache.spark.sql.Dataset
+import org.apache.spark.sql.{DataFrame, Dataset}
 
 object TweetsDataLoader {
 
