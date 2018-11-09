@@ -5,7 +5,7 @@ import java.util.Properties
 
 import com.gd.twitteranalytics.util.AppConfigReader
 
-//TODO Check the external configuration feasability with deployment to Oozie workflow manager..
+//TODO Check the external configuration feasibility with deployment to Oozie workflow manager
 object ExternalConfigLoader {
 
   val reportProperties = new Properties
