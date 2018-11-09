@@ -44,4 +44,10 @@ trait TwitterReport {
   def saveActiveUserReport(report:DataFrame,reportType:String,log:Logger)={
     saveReportToHdfs(report, activeUserReportSavePath + reportType)
   }
+
+  def stopJob(spark:SparkSession,log:Logger) = {
+    printErrorLogs(log)
+    spark.stop
+    System.exit(1)
+  }
 }

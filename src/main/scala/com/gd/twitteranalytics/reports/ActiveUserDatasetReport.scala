@@ -21,9 +21,7 @@ object ActiveUserDatasetReport extends TwitterReport{
       spark.stop
     }
     else {
-      printErrorLogs(log)
-      spark.stop
-      System.exit(1)
+      stopJob(spark,log)
     }
   }
 }
