@@ -1,27 +1,16 @@
 package com.gd.twitteranalytics.reports
 
-import ActiveUserReportProcessor._
-import TwitterReportGenerator._
+import com.gd.twitteranalytics.reports.ActiveUserReportBuildingStrategy.buildWithDatasetAPI
+import com.gd.twitteranalytics.reports.ReportType.ReportType
 
-object ActiveUserDatasetReport extends TwitterReport{
-  val log = getLogger("ActiveUserDataSetReport")
+object ActiveUserDatasetReport extends ActiveUsersReport {
+  override def getReportName(): String = "ActiveUserDatasetReport"
+
+  override def getReportType(): ReportType = ReportType.Dataset
+
+  override def getReportBuildingStrategy() = buildWithDatasetAPI
 
   def main(args: Array[String]): Unit = {
-    val spark = setSparkSession("TwitterActiveUserDataSetReport")
-    if (validateReportPath(spark,log)){
-      log.debug("=======> Stage 1: Reading Data for Twitter Active User Report...")
-      val inputDataForReport = getInputDataForActiveUserReport(dataPath, spark,log)
-
-      log.debug("=======> Stage 2: Creating report for Twitter Active Users...")
-      val report = execute(getReportWithDataSetProcessing, spark, inputDataForReport, reportDate)
-
-      log.debug("=======> Stage 3: Saving Report on HDFS...")
-      saveActiveUserReport(report,"/dataSetReport",log)
-
-      spark.stop
-    }
-    else {
-      stopJob(spark,log)
-    }
+    run(getSparkSession())
   }
 }

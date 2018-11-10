@@ -5,9 +5,9 @@ import org.apache.spark.sql.expressions.scalalang.typed.{count => typedCount}
 import org.apache.spark.sql.functions.{count,lit, row_number}
 import org.apache.spark.sql.{DataFrame, Dataset, Encoders, SparkSession}
 
-object ActiveUserReportProcessor {
+object ActiveUserReportBuildingStrategy {
 
-  def getReportWithSqlProcessing(spark: SparkSession, tweetStatusDf: DataFrame,reportDate:String): DataFrame = {
+  def buildWithSqlAPI(spark: SparkSession, tweetStatusDf: DataFrame, reportDate:String): DataFrame = {
     tweetStatusDf.createOrReplaceTempView("status")
     val activeUsersIdAndLocation = """SELECT
                                         location,
@@ -34,7 +34,7 @@ object ActiveUserReportProcessor {
                 WHERE rowNum <= 5""")
   }
 
-  def getReportWithDataFrameProcessing(spark: SparkSession, tweetStatusDf: DataFrame,reportDate:String): DataFrame = {
+  def buildWithDataFrameAPI(spark: SparkSession, tweetStatusDf: DataFrame, reportDate:String): DataFrame = {
     import spark.implicits._
 
     val activeUsers = tweetStatusDf
@@ -49,7 +49,7 @@ object ActiveUserReportProcessor {
                .where($"rn" <= 5).drop("rn").drop("frequency")
   }
 
-  def getReportWithDataSetProcessing(spark: SparkSession, tweetStatusDf: DataFrame,reportDate:String):DataFrame = {
+  def buildWithDatasetAPI(spark: SparkSession, tweetStatusDf: DataFrame, reportDate:String):DataFrame = {
     import spark.implicits._
     implicit val encoderForStatus = Encoders.product[TwitterStatus]
     implicit val encoderForReport = Encoders.product[Report]
